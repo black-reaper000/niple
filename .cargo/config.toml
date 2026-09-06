@@ -1,0 +1,8 @@
+[registries.crates-io]
+protocol = "sparse"
+
+[target.x86_64-pc-windows-gnu]
+linker = "rust-lld"
+
+[env]
+CMAKE_POLICY_VERSION_MINIMUM = "3.5"

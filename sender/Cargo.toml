@@ -1,0 +1,23 @@
+[package]
+name = "sender"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+protocol = { path = "../protocol" }
+cpal.workspace = true
+tokio.workspace = true
+clap.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+mdns-sd.workspace = true
+byteorder.workspace = true
+bytes.workspace = true
+audiopus = { version = "0.3.0-rc.0", optional = true }
+
+[features]
+default = ["opus"]
+opus = ["dep:audiopus"]

@@ -1,0 +1,74 @@
+name: LAN Audio CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Build & Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install macOS dependencies
+        if: runner.os == 'macOS'
+        run: |
+          brew install pkg-config opus || true
+
+      - name: Install Windows dependencies
+        if: runner.os == 'Windows'
+        run: |
+          # CMake is pre-installed on windows-latest
+          cmake --version
+
+      - name: Format check
+        run: cargo fmt --all -- --check
+
+      - name: Workspace Cargo Check
+        run: cargo check --workspace --all-targets
+
+      - name: Run Workspace Tests
+        run: cargo test --workspace --verbose
+
+      - name: Build Release Binaries
+        run: cargo build --workspace --release --verbose
+
+      - name: Upload Windows Artifacts
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: lan-audio-windows
+          path: |
+            target/release/sender.exe
+            target/release/receiver.exe
+            target/release/dashboard.exe
+
+      - name: Upload macOS Artifacts
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: lan-audio-macos
+          path: |
+            target/release/sender
+            target/release/receiver
+            target/release/dashboard
