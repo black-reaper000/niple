@@ -1,4 +1,4 @@
-# LAN Audio
+# LAN Audio :
 
 > **Native Low-Latency Windows &rarr; Mac Wireless Speaker**
 > Turn your MacBook into a high-fidelity, real-time wireless speaker for your Windows PC over your local home network (LAN). Optimized for the **lowest achievable latency** with zero cloud relays, zero screen-capture pipeline overhead, and no WebRTC bloat.
